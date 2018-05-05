@@ -25,8 +25,8 @@ public class GunController : MonoBehaviour {
     }
 
     private static readonly Quaternion theIQ = Quaternion.identity;
-    private static readonly Quaternion shotRotation = Quaternion.Euler(0, 0, -7);
-    private static readonly Quaternion shotRotationReverse = Quaternion.Euler(0, 0, 7);
+    private static readonly Quaternion shotRotation = Quaternion.Euler(0, 0, -16);
+    private static readonly Quaternion shotRotationReverse = Quaternion.Euler(0, 0, 16);
     void Update() {
         Vector3 aimPosition;
         if (playerGun) {
@@ -45,31 +45,36 @@ public class GunController : MonoBehaviour {
         if (playerGun && Input.GetMouseButtonDown(0)) {
             FireGun();
         }
-        imageT.localRotation = Quaternion.Lerp(imageT.localRotation, theIQ, Time.deltaTime);
+        imageT.localRotation = Quaternion.Lerp(imageT.localRotation, theIQ, Time.deltaTime*3);
     }
 
     public void FireGun() {
         GameObject newBullet = Instantiate(bulletPrefab);
         newBullet.transform.SetPositionAndRotation(shootPoint.position, shootPoint.rotation);
         AudioManager.instance.PlayGunSound();
-        imageT.localRotation *= reversed ? shotRotationReverse : shotRotation;
+        imageT.localRotation *= (rState == ReverseState.reversed) ? shotRotationReverse : shotRotation;
     }
 
-    private bool reversed = false;
+    private enum ReverseState {
+        initial,
+        normal,
+        reversed
+    }
+    private ReverseState rState = ReverseState.initial;
     private void AdjustImageForAngle(float angleFromPlayer) {
         if (angleFromPlayer > -90 && angleFromPlayer < 90) {
-            if (!reversed) {
+            if (rState != ReverseState.reversed) {
                 imageT.localScale = new Vector3(-1, 1, 1);
                 imageT.localPosition = new Vector3(0, -GUN_HEIGHT_ADJUSTMENT, 0);
                 imageT.localRotation = theIQ;
-                reversed = true;
+                rState = ReverseState.reversed;
             }
         } else {
-            if (reversed) {
+            if (rState != ReverseState.normal) {
                 imageT.localScale = new Vector3(-1, -1, 1);
                 imageT.localPosition = new Vector3(0, GUN_HEIGHT_ADJUSTMENT, 0);
                 imageT.localRotation = theIQ;
-                reversed = false;
+                rState = ReverseState.normal;
             }
         }
     }
