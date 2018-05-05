@@ -20,8 +20,9 @@ public class GunController : MonoBehaviour {
         cameraDistance = -theCamera.transform.position.z;
     }
 
-    private bool reversed = false;
-
+    private static readonly Quaternion theIQ = Quaternion.identity;
+    private static readonly Quaternion shotRotation = Quaternion.Euler(0, 0, -7);
+    private static readonly Quaternion shotRotationReverse = Quaternion.Euler(0, 0, 7);
     void Update() {
         Vector3 v3 = Input.mousePosition;
         v3.z = cameraDistance;
@@ -30,25 +31,33 @@ public class GunController : MonoBehaviour {
         AdjustImageForAngle(angleFromPlayer);
         myT.rotation = Quaternion.Euler(0, 0, angleFromPlayer);
         myT.position = gunPos;
-
+        imageT.localRotation = Quaternion.Lerp(imageT.localRotation, theIQ, Time.deltaTime);
         if (Input.GetMouseButtonDown(0)) {
-            GameObject newBullet = Instantiate(bulletPrefab);
-            newBullet.transform.SetPositionAndRotation(shootPoint.position, shootPoint.rotation);
-            AudioManager.instance.PlayGunSound();
+            FireGun();
         }
     }
 
+    private void FireGun() {
+        GameObject newBullet = Instantiate(bulletPrefab);
+        newBullet.transform.SetPositionAndRotation(shootPoint.position, shootPoint.rotation);
+        AudioManager.instance.PlayGunSound();
+        imageT.localRotation *= reversed ? shotRotationReverse : shotRotation;
+    }
+
+    private bool reversed = false;
     private void AdjustImageForAngle(float angleFromPlayer) {
         if (angleFromPlayer > -90 && angleFromPlayer < 90) {
             if (!reversed) {
                 imageT.localScale = new Vector3(-1, 1, 1);
                 imageT.localPosition = new Vector3(0, -GUN_HEIGHT_ADJUSTMENT, 0);
+                imageT.localRotation = theIQ;
                 reversed = true;
             }
         } else {
             if (reversed) {
                 imageT.localScale = new Vector3(-1, -1, 1);
                 imageT.localPosition = new Vector3(0, GUN_HEIGHT_ADJUSTMENT, 0);
+                imageT.localRotation = theIQ;
                 reversed = false;
             }
         }
