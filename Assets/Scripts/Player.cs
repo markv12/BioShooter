@@ -11,6 +11,7 @@ public class Player : MonoBehaviour {
         }
         set {
             health = value;
+            GameManager.instance.healthText.text = "Health: " + health.ToString();
             if(health <= 0) {
                 GameManager.instance.RestartGame();
             }

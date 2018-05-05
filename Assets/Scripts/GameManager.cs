@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
+using System;
 
 public class GameManager : MonoBehaviour {
     public static GameManager instance;
@@ -10,6 +11,12 @@ public class GameManager : MonoBehaviour {
     public CanvasGroup BlackCurtain;
     public TMP_Text deathText;
     private static string lastDeathMessage;
+
+    public TMP_Text killNameText;
+    public TMP_Text killBioText;
+    public TextAsset traceryBioJson;
+
+    public TMP_Text healthText;
 
     public Player player;
     public Transform playerT;
@@ -90,4 +97,17 @@ public class GameManager : MonoBehaviour {
         gameRunning = true;
     }
 
+    public void ShowKillInfo() {
+        killNameText.text = GetKillName();
+        killBioText.text = GetBio();
+    }
+
+    private string GetKillName() {
+        return Names.RandomFirstName() + " " + Names.RandomLastName();
+    }
+
+    private string GetBio() {
+        TraceryGrammar grammar = new TraceryGrammar(traceryBioJson.text);
+        return grammar.Generate();
+    }
 }

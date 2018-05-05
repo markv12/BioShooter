@@ -5,6 +5,7 @@ using UnityEngine;
 public class Enemy : MonoBehaviour {
 
     public Collider2D mainCollider;
+    public GunController gun;
 
     private float health = 2;
     public float Health {
@@ -15,9 +16,19 @@ public class Enemy : MonoBehaviour {
             health = value;
             if (health <= 0) {
                 Destroy(mainCollider);
+                Destroy(gun);
+                AudioManager.instance.PlayGrunt();
+                GameManager.instance.ShowKillInfo();
+                StopCoroutine(attackRoutine);
                 Destroy(gameObject, 5);
             }
         }
+    }
+
+    private Coroutine attackRoutine;
+    void Start() {
+        gun.ownerT = transform;
+        attackRoutine = StartCoroutine(AttackRoutine());
     }
 
     private const float MOVE_SPEED = 5;
@@ -30,6 +41,16 @@ public class Enemy : MonoBehaviour {
                 float theX = (MOVE_SPEED * Time.deltaTime * Mathf.Sign(distanceFromPlayer));
                 transform.position += new Vector3(theX, 0, 0);
             }
+        }
+        if (Vector3.Distance(transform.position, Player.instance.transform.position) > 50) {
+            Destroy(gameObject);
+        }
+    }
+
+    private IEnumerator AttackRoutine() {
+        while (true) {
+            yield return new WaitForSeconds(2f + Random.Range(-1f, 1f));
+            gun.FireGun();
         }
     }
 }

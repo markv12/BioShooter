@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class GunController : MonoBehaviour {
 
-    public Transform playerT;
+    public bool playerGun;
+
+    public Transform ownerT;
     public Transform shootPoint;
     public Transform myT;
     public Transform imageT;
@@ -17,27 +19,36 @@ public class GunController : MonoBehaviour {
     private const float GUN_HEIGHT_ADJUSTMENT = 1.3f;
 
     void Awake() {
-        cameraDistance = -theCamera.transform.position.z;
+        if (playerGun) {
+            cameraDistance = -theCamera.transform.position.z;
+        }
     }
 
     private static readonly Quaternion theIQ = Quaternion.identity;
     private static readonly Quaternion shotRotation = Quaternion.Euler(0, 0, -7);
     private static readonly Quaternion shotRotationReverse = Quaternion.Euler(0, 0, 7);
     void Update() {
-        Vector3 v3 = Input.mousePosition;
-        v3.z = cameraDistance;
-        Vector3 gunPos = GetGunPosition(theCamera.ScreenToWorldPoint(v3));
+        Vector3 aimPosition;
+        if (playerGun) {
+            Vector3 v3 = Input.mousePosition;
+            v3.z = cameraDistance;
+            aimPosition = theCamera.ScreenToWorldPoint(v3);
+        } else {
+            aimPosition = Player.instance.transform.position;
+        }
+
+        Vector3 gunPos = GetGunPosition(aimPosition);
         float angleFromPlayer = GetGunAngle(gunPos);
         AdjustImageForAngle(angleFromPlayer);
         myT.rotation = Quaternion.Euler(0, 0, angleFromPlayer);
         myT.position = gunPos;
-        imageT.localRotation = Quaternion.Lerp(imageT.localRotation, theIQ, Time.deltaTime);
-        if (Input.GetMouseButtonDown(0)) {
+        if (playerGun && Input.GetMouseButtonDown(0)) {
             FireGun();
         }
+        imageT.localRotation = Quaternion.Lerp(imageT.localRotation, theIQ, Time.deltaTime);
     }
 
-    private void FireGun() {
+    public void FireGun() {
         GameObject newBullet = Instantiate(bulletPrefab);
         newBullet.transform.SetPositionAndRotation(shootPoint.position, shootPoint.rotation);
         AudioManager.instance.PlayGunSound();
@@ -64,17 +75,17 @@ public class GunController : MonoBehaviour {
     }
 
     private float GetGunAngle(Vector3 gunPos) {
-        Vector3 relPosFromPlayer = gunPos - playerT.position;
+        Vector3 relPosFromPlayer = gunPos - ownerT.position;
         return Mathf.Atan2(relPosFromPlayer.y, relPosFromPlayer.x) * 57.2958f;
     }
 
     private Vector3 GetGunPosition(Vector3 gunPos) {
         Vector3 result;
-        Vector3 relPosFromPlayer = gunPos - playerT.position;
+        Vector3 relPosFromPlayer = gunPos - ownerT.position;
         relPosFromPlayer.z = 0;
         if (relPosFromPlayer.magnitude > DISTANCE_FROM_BODY) {
             Vector3 normalizedAngle = relPosFromPlayer.normalized * DISTANCE_FROM_BODY;
-            result = playerT.position + normalizedAngle;
+            result = ownerT.position + normalizedAngle;
         } else {
             result = gunPos;
         }

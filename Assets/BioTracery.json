@@ -1,0 +1,27 @@
+{
+  "origin": "#bio#",
+  "bio": ["#interests# #extra#", "#interests# #personaldetail#"],
+  
+  "interests": ["He #verbphrase# #ingverb# #noun#."],
+  "verbphrase": ["looked forward to", "enjoyed", "dreaded", "was inspired by", "didn't care for", "always thought about", "couldn't see himself", "didn't see the appeal of", "will be remembered for"],
+  "ingverb": ["seeing", "feeling", "smelling", "meeting", "tasting", "experiencing", "running from", "stepping on", "getting caught with", "giving #nonlivingthing# to"],
+  "noun" : ["#nonlivingthing#", "#livingthing#"],
+  "nonlivingthing" : ["cheese", "vasoline", "sausages", "old car parts"],
+  "livingthing":["puppies", "his pet hamster", "his wife", "his lover", "his mother-in-law", "stray cats", "his best friend", "his roommate"],
+  
+  
+  "extra" : ["He was #amountoftime# away from #endthing#."],
+  "amountoftime":["1 #singularunitoftime#", "#number# #unitoftime#"],
+  "number": ["2", "3", "4", "5", "6", "7", "8", "9"],
+  "unitoftime": ["days", "hours", "weeks", "months", "years"],
+  "singularunitoftime": ["day", "hour", "week", "month", "year"],
+  "endthing":["retirement", "#ingverb# #noun# again", "#ingverb# #noun#", "#ingverb# #noun# for the first time"],
+
+  "personaldetail" : ["His #wasmatch# #timeadverb# #adjective#."],
+  "wasmatch" : ["#possession# was", "#pluralpossession# were"],
+  "timeadverb" : ["always", "never", "sometimes", "often", "frequently", "seldom", "", ""],
+  "possession": ["face", "left hand", "right hand", "nose", "underwear", "wife"],
+  "pluralpossession": ["hands", "shoes", "glasses", "ears"],
+  "adjective":["clean", "dirty", "wet", "dry", "moving", "slippery"]
+
+}
