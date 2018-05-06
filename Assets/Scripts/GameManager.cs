@@ -12,11 +12,15 @@ public class GameManager : MonoBehaviour {
     public TMP_Text deathText;
     private static string lastDeathMessage;
 
+    public GameObject killInfoBox;
     public TMP_Text killNameText;
     public TMP_Text killBioText;
+    public Transform killInfoBoxT;
+
     public TextAsset traceryBioJson;
 
     public TMP_Text healthText;
+    public TMP_Text scoreText;
 
     public Player player;
     public Transform playerT;
@@ -98,8 +102,12 @@ public class GameManager : MonoBehaviour {
     }
 
     public void ShowKillInfo() {
+        if (!killInfoBox.activeSelf){
+            killInfoBox.SetActive(true);
+        }
         killNameText.text = GetKillName();
         killBioText.text = GetBio();
+        PopScale(killInfoBoxT);
     }
 
     private string GetKillName() {
@@ -109,5 +117,33 @@ public class GameManager : MonoBehaviour {
     private string GetBio() {
         TraceryGrammar grammar = new TraceryGrammar(traceryBioJson.text);
         return grammar.Generate();
+    }
+
+    public void PopScale(Transform t) {
+        StartCoroutine(_PopScale(t));
+    }
+
+    private const float popTime = 0.25f;
+    private static readonly Vector3 popScale = new Vector3(1.075f, 1.075f, 1f);
+    private IEnumerator _PopScale(Transform t) {
+        t.localScale = popScale;
+        float progress = 0;
+        float elapsedTime = 0;
+        while (progress <= 1) {
+            elapsedTime += Time.deltaTime;
+            progress = elapsedTime / popTime;
+            t.localScale = Vector3.Lerp(popScale, Vector3.one, progress);
+            yield return null;
+        }
+        t.localScale = Vector3.one;
+    }
+
+    public void DisplayHealth(float newHealth) {
+        healthText.text = "Health: " + newHealth.ToString();
+        PopScale(healthText.transform);
+    }
+    public void DisplayScore(float newScore) {
+        scoreText.text = "Score: " + newScore.ToString();
+        PopScale(scoreText.transform);
     }
 }

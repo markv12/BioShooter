@@ -9,14 +9,14 @@ public class Bullet : MonoBehaviour {
 
     void Update () {
         myT.Translate(speed * Time.deltaTime);
-        if(Vector3.Distance(myT.position, Player.instance.transform.position) > 50) {
+        if(Vector3.Distance(myT.position, Player.p.transform.position) > 50) {
             Destroy(gameObject);
         }
     }
 
     void OnTriggerEnter2D(Collider2D col) {
         if (col.gameObject.tag == "Player") {
-            col.gameObject.GetComponent<Player>().Health -= 1;
+            col.gameObject.GetComponentInParent<Player>().Health -= 1;
         } else if(col.gameObject.tag == "Enemy") {
             col.gameObject.GetComponentInParent<Enemy>().Health -= 1;
         }

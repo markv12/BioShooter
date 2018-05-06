@@ -15,7 +15,7 @@ public class GunController : MonoBehaviour {
 
     public Camera theCamera;
     public static float cameraDistance;
-    private const float DISTANCE_FROM_BODY = 3f;
+    private const float DISTANCE_FROM_BODY = 3.5f;
     private const float GUN_HEIGHT_ADJUSTMENT = 1.3f;
 
     void Awake() {
@@ -34,7 +34,7 @@ public class GunController : MonoBehaviour {
             v3.z = cameraDistance;
             aimPosition = theCamera.ScreenToWorldPoint(v3);
         } else {
-            aimPosition = Player.instance.transform.position;
+            aimPosition = Player.p.transform.position;
         }
 
         Vector3 gunPos = GetGunPosition(aimPosition);
@@ -52,29 +52,24 @@ public class GunController : MonoBehaviour {
         GameObject newBullet = Instantiate(bulletPrefab);
         newBullet.transform.SetPositionAndRotation(shootPoint.position, shootPoint.rotation);
         AudioManager.instance.PlayGunSound();
-        imageT.localRotation *= (rState == ReverseState.reversed) ? shotRotationReverse : shotRotation;
+        imageT.localRotation *= (dState == DirectionState.right) ? shotRotationReverse : shotRotation;
     }
 
-    private enum ReverseState {
-        initial,
-        normal,
-        reversed
-    }
-    private ReverseState rState = ReverseState.initial;
+    private DirectionState dState = DirectionState.initial;
     private void AdjustImageForAngle(float angleFromPlayer) {
         if (angleFromPlayer > -90 && angleFromPlayer < 90) {
-            if (rState != ReverseState.reversed) {
+            if (dState != DirectionState.right) {
                 imageT.localScale = new Vector3(-1, 1, 1);
                 imageT.localPosition = new Vector3(0, -GUN_HEIGHT_ADJUSTMENT, 0);
                 imageT.localRotation = theIQ;
-                rState = ReverseState.reversed;
+                dState = DirectionState.right;
             }
         } else {
-            if (rState != ReverseState.normal) {
+            if (dState != DirectionState.left) {
                 imageT.localScale = new Vector3(-1, -1, 1);
                 imageT.localPosition = new Vector3(0, GUN_HEIGHT_ADJUSTMENT, 0);
                 imageT.localRotation = theIQ;
-                rState = ReverseState.normal;
+                dState = DirectionState.left;
             }
         }
     }
@@ -96,4 +91,10 @@ public class GunController : MonoBehaviour {
         }
         return result;
     }
+}
+
+public enum DirectionState {
+    initial,
+    left,
+    right
 }

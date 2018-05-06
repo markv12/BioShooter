@@ -1,11 +1,12 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour {
 
     public Collider2D mainCollider;
+    public Collider2D headCollider;
     public GunController gun;
+    public Transform bodyTransform;
 
     private float health = 2;
     public float Health {
@@ -16,18 +17,19 @@ public class Enemy : MonoBehaviour {
             health = value;
             if (health <= 0) {
                 Destroy(mainCollider);
+                Destroy(headCollider);
                 Destroy(gun);
                 AudioManager.instance.PlayGrunt();
                 GameManager.instance.ShowKillInfo();
                 StopCoroutine(attackRoutine);
                 Destroy(gameObject, 5);
+                Player.p.Score++;
             }
         }
     }
 
     private Coroutine attackRoutine;
     void Start() {
-        gun.ownerT = transform;
         attackRoutine = StartCoroutine(AttackRoutine());
     }
 
@@ -36,21 +38,37 @@ public class Enemy : MonoBehaviour {
 
     void Update() {
         if (health >= 0) {
-            float distanceFromPlayer = Player.instance.transform.position.x - transform.position.x;
+            float distanceFromPlayer = Player.p.transform.position.x - transform.position.x;
             if (Mathf.Abs(distanceFromPlayer) > MIN_DISTANCE) {
                 float theX = (MOVE_SPEED * Time.deltaTime * Mathf.Sign(distanceFromPlayer));
+                SetHorizontalInput(theX);
                 transform.position += new Vector3(theX, 0, 0);
             }
         }
-        if (Vector3.Distance(transform.position, Player.instance.transform.position) > 50) {
+        if (Vector3.Distance(transform.position, Player.p.transform.position) > 50) {
             Destroy(gameObject);
         }
     }
 
     private IEnumerator AttackRoutine() {
         while (true) {
-            yield return new WaitForSeconds(2f + Random.Range(-1f, 1f));
+            yield return new WaitForSeconds(2f + Random.Range(-1f, 1.5f));
             gun.FireGun();
+        }
+    }
+
+    private DirectionState dState = DirectionState.initial;
+    private void SetHorizontalInput(float input) {
+        if (input > 0) {
+            if (dState != DirectionState.right) {
+                bodyTransform.localScale = new Vector3(1, 1, 1);
+                dState = DirectionState.right;
+            }
+        } else if (input < 0) {
+            if (dState != DirectionState.left) {
+                bodyTransform.localScale = new Vector3(-1, 1, 1);
+                dState = DirectionState.left;
+            }
         }
     }
 }

@@ -11,19 +11,32 @@ public class Player : MonoBehaviour {
         }
         set {
             health = value;
-            GameManager.instance.healthText.text = "Health: " + health.ToString();
+            GameManager.instance.DisplayHealth(health);
             if(health <= 0) {
                 GameManager.instance.RestartGame();
             }
         }
     }
 
+    private float score =  0;
+    public float Score {
+        get {
+            return score;
+        }
+        set {
+            score = value;
+            GameManager.instance.DisplayScore(score);
+        }
+    }
+
+    public Transform bodyTransform;
+
 	public float maxJumpHeight = 4;
 	public float minJumpHeight = 1;
 	public float timeToJumpApex = .4f;
 	float accelerationTimeAirborne = .2f;
 	float accelerationTimeGrounded = .1f;
-	float moveSpeed = 7;
+	public float moveSpeed;
 
 	public Vector2 wallJumpClimb;
 	public Vector2 wallJumpOff;
@@ -41,14 +54,14 @@ public class Player : MonoBehaviour {
 
 	Controller2D controller;
 
-	Vector2 directionalInput;
+	float horizontalInput;
 	bool wallSliding;
 	int wallDirX;
 
-    public static Player instance;
+    public static Player p;
 
 	void Awake() {
-        instance = this;
+        p = this;
 		controller = GetComponent<Controller2D> ();
 
 		gravity = -(2 * maxJumpHeight) / Mathf.Pow (timeToJumpApex, 2);
@@ -61,7 +74,7 @@ public class Player : MonoBehaviour {
             CalculateVelocity();
             HandleWallSliding();
 
-            controller.Move(velocity * Time.deltaTime, directionalInput);
+            controller.Move(velocity * Time.deltaTime, new Vector2(horizontalInput, 0));
 
             if (controller.collisions.above || controller.collisions.below) {
                 if (controller.collisions.slidingDownMaxSlope) {
@@ -73,17 +86,29 @@ public class Player : MonoBehaviour {
         }
 	}
 
-	public void SetDirectionalInput (Vector2 input) {
-		directionalInput = input;
-	}
+    private DirectionState dState = DirectionState.initial;
+    public void SetHorizontalInput (float input) {
+		horizontalInput = input;
+        if (input > 0) {
+            if (dState != DirectionState.right) {
+                bodyTransform.localScale = new Vector3(1, 1, 1);
+                dState = DirectionState.right;
+            }
+        } else if(input < 0) {
+            if (dState != DirectionState.left) {
+                bodyTransform.localScale = new Vector3(-1, 1, 1);
+                dState = DirectionState.left;
+            }
+        }
+    }
 
 	public void OnJumpInputDown() {
 		if (wallSliding) {
-			if (wallDirX == directionalInput.x) {
+			if (wallDirX == horizontalInput) {
 				velocity.x = -wallDirX * wallJumpClimb.x;
 				velocity.y = wallJumpClimb.y;
 			}
-			else if (directionalInput.x == 0) {
+			else if (horizontalInput == 0) {
 				velocity.x = -wallDirX * wallJumpOff.x;
 				velocity.y = wallJumpOff.y;
 			}
@@ -94,7 +119,7 @@ public class Player : MonoBehaviour {
 		}
 		if (controller.collisions.below) {
 			if (controller.collisions.slidingDownMaxSlope) {
-				if (directionalInput.x != -Mathf.Sign (controller.collisions.slopeNormal.x)) { // not jumping against max slope
+				if (horizontalInput != -Mathf.Sign (controller.collisions.slopeNormal.x)) { // not jumping against max slope
 					velocity.y = maxJumpVelocity * controller.collisions.slopeNormal.y;
 					velocity.x = maxJumpVelocity * controller.collisions.slopeNormal.x;
 				}
@@ -125,7 +150,7 @@ public class Player : MonoBehaviour {
 				velocityXSmoothing = 0;
 				velocity.x = 0;
 
-				if (directionalInput.x != wallDirX && directionalInput.x != 0) {
+				if (horizontalInput != wallDirX && horizontalInput != 0) {
 					timeToWallUnstick -= Time.deltaTime;
 				}
 				else {
@@ -141,7 +166,7 @@ public class Player : MonoBehaviour {
 	}
 
 	void CalculateVelocity() {
-		float targetVelocityX = directionalInput.x * moveSpeed;
+		float targetVelocityX = horizontalInput * moveSpeed;
 		velocity.x = Mathf.SmoothDamp (velocity.x, targetVelocityX, ref velocityXSmoothing, (controller.collisions.below)?accelerationTimeGrounded:accelerationTimeAirborne);
 		velocity.y += gravity * Time.deltaTime;
 	}
