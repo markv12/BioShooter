@@ -26,8 +26,13 @@ public class GameManager : MonoBehaviour {
     public Transform playerT;
 
     private static bool firstGame = true;
+    private TraceryGrammar grammar;
 
-	void Awake () {
+    void Awake () {
+        grammar = new TraceryGrammar(traceryBioJson.text);
+        string preloadString = grammar.Generate();
+        preloadString = GetKillName();
+
         deathText.text = lastDeathMessage;
         instance = this;
         playerT = player.transform;
@@ -115,7 +120,6 @@ public class GameManager : MonoBehaviour {
     }
 
     private string GetBio() {
-        TraceryGrammar grammar = new TraceryGrammar(traceryBioJson.text);
         return grammar.Generate();
     }
 

@@ -1893,6 +1893,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyPrefab: {fileID: 1384266158903004, guid: 3000875ca40c0a4478d3642f4da95eaa,
     type: 2}
+  enemy2Prefab: {fileID: 1087296488259140, guid: c4c5d6c40e3f0f642ad99a30bdcbd2c7,
+    type: 2}
   theCamera: {fileID: 118349423}
 --- !u!4 &994313450
 Transform:
@@ -2862,7 +2864,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 103.670006, y: -75.19}
+  m_AnchoredPosition: {x: 120, y: -90}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1879961889
@@ -2897,7 +2899,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 103.67, y: -28.339966}
+  m_AnchoredPosition: {x: 120, y: -38}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1879961891

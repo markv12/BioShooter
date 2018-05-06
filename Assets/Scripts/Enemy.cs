@@ -8,6 +8,7 @@ public class Enemy : MonoBehaviour {
     public GunController gun;
     public Transform bodyTransform;
 
+    [SerializeField]
     private float health = 2;
     public float Health {
         get {

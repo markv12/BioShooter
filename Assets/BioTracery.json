@@ -1,13 +1,13 @@
 {
   "origin": "#bio#",
-  "bio": ["#interests# #extra#", "#interests# #personaldetail#"],
+  "bio": ["#interests# #extra#", "#interests# #personaldetail#", "#fatherof# #interests#", "#interests# #futureplan#"],
   
   "interests": ["He #verbphrase# #ingverb# #noun#."],
-  "verbphrase": ["looked forward to", "enjoyed", "dreaded", "was inspired by", "didn't care for", "always thought about", "couldn't see himself", "didn't see the appeal of", "will be remembered for", "got supreme enjoyment out of", "was often seen", "found great meaning in", "always regretted"],
-  "ingverb": ["seeing", "feeling", "smelling", "sniffing", "tasting", "licking", "running from", "stepping on", "getting caught with", "giving #nonlivingthing# to", "running away with", "getting lost in", "falling for"],
+  "verbphrase": ["looked forward to", "enjoyed", "was inspired by", "loved", "always thought about", "will be remembered for", "got supreme enjoyment out of", "was often seen", "found great meaning in", "always regretted"],
+  "ingverb": ["yelling at", "feeling", "smelling", "sniffing", "tasting", "licking", "shaking", "falling in love with", "trying to eat", "rubbing", "stroking", "stepping on", "getting caught with", "running away with"],
   "noun" : ["#nonlivingthing#", "#livingthing#"],
-  "nonlivingthing" : ["cheese", "vasoline", "sausages", "old car parts", "garlic bread", "pizza", "pizza rolls", "a rusty spoon"],
-  "livingthing":["puppies", "his pet hamster", "his wife", "his lover", "his mother-in-law", "stray cats", "his best friend", "his roommate", "stray dogs", "his pet goldfish"],
+  "nonlivingthing" : ["cheese", "vasoline", "sausages", "old car parts", "garlic bread", "pizza", "pizza rolls", "a rusty spoon", "a garden hose", "WD40", "buffalo wings", "easy cheese", "a pressure washer"],
+  "livingthing":["puppies", "his pet hamster", "his wife", "his lover", "his mother-in-law", "stray cats", "his best friend", "his roommate", "stray dogs", "his pet goldfish", "the neighbor lady"],
   
   "extra" : ["He was #amountoftime# away from #endthing#."],
   "amountoftime":["1 #singularunitoftime#", "#number# #unitoftime#"],
@@ -19,8 +19,13 @@
   "personaldetail" : ["His #wasmatch# #timeadverb# #adjective#."],
   "wasmatch" : ["#possession# was", "#pluralpossession# were"],
   "timeadverb" : ["always", "never", "sometimes", "often", "frequently", "seldom"],
-  "possession": ["face", "left hand", "right hand", "nose", "underwear", "wife", "girlfriend", "brow", "chest", "chest hair"],
-  "pluralpossession": ["hands", "shoes", "glasses", "ears", "cheeks", "feet"],
-  "adjective":["clean", "dirty", "wet", "dry", "rough", "slippery", "gritty", "smooth", "wrinkled", "sandy"]
+  "possession": ["face", "left hand", "right hand", "nose", "underwear", "wife", "girlfriend", "brow", "chest", "chest hair", "life partner"],
+  "pluralpossession": ["hands", "shoes", "ears", "cheeks", "feet"],
+  "adjective":["clean", "dirty", "wet", "dry", "rough", "slippery", "gritty", "smooth", "wrinkled", "sandy"],
 
+  "fatherof": ["Father of #number#."],
+
+  "futureplan":["#wantedtobe# #occupation#."],
+  "wantedtobe":["He wanted to be a", "he was studying to become a", "He had plans to become a", "He would have made a fine"],
+  "occupation":["receptionist", "secretary", "nurse", "vet", "proctologist", "jass guitarist", "neurosurgeon", "train conductor", "cat therapist", "sommelier", "substitute teacher", "funeral clown", "haberdasher", "fishmonger", "barista"]
 }
